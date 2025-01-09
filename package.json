@@ -4,12 +4,27 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "lint": "",
     "test": "vitest"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "license",
+    "checker",
+    "pnpm"
+  ],
+  "author": {
+    "name": "Robert Wagner",
+    "email": "rwwagner90@gmail.com",
+    "url": "https://github.com/RobbieTheWagner"
+  },
   "license": "MIT",
+  "packageManager": "^pnpm@9.15.3",
   "devDependencies": {
+    "memfs": "^4.15.3",
     "vitest": "^2.1.8"
+  },
+  "engines": {
+    "node": ">= 18",
+    "pnpm": ">= 9"
   }
 }

@@ -1,9 +1,5 @@
 const { exec } = require('child_process');
-const {
-  loadAllowedPackages,
-  processLicenseKey,
-  allowedLicenses,
-} = require('./licenseChecker');
+const { loadConfig, processLicenseKey } = require('./licenseChecker');
 
 // ANSI escape codes for colors
 const colors = {
@@ -39,7 +35,7 @@ function getPnpmLicenses() {
 
 (async () => {
   try {
-    const allowedPackages = loadAllowedPackages();
+    const { allowedPackages, allowedLicenses } = loadConfig();
     const licenses = await getPnpmLicenses();
 
     console.log('Licenses Data:', licenses);

@@ -1,4 +1,4 @@
-const fs = require('fs');
+import { existsSync, readFileSync } from 'node:fs';
 const path = require('path');
 
 // ANSI escape codes for colors
@@ -9,8 +9,8 @@ const colors = {
   yellow: '\x1b[33m',
 };
 
-// List of allowed licenses
-const allowedLicenses = [
+// Default allowed licenses
+const defaultAllowedLicenses = [
   'Apache-2.0',
   'All Rights Reserved',
   'Artistic-2.0',
@@ -44,7 +44,7 @@ function findLicenseCheckerConfig(startDir) {
 
   while (true) {
     const configPath = path.join(currentDir, '.pnpm-license-checker.json');
-    if (fs.existsSync(configPath)) {
+    if (existsSync(configPath)) {
       return configPath;
     }
 
@@ -60,36 +60,44 @@ function findLicenseCheckerConfig(startDir) {
 }
 
 /**
- * Loads allowed packages from the configuration file
- * @returns {Array<string>} - Array of allowed package names
+ * Loads configuration values from the configuration file
+ * @returns {Object} - Contains `allowedPackages` and `allowedLicenses`
  */
-function loadAllowedPackages() {
+function loadConfig() {
+  console.log('Hello!');
   const configPath = findLicenseCheckerConfig(process.cwd());
   if (!configPath) {
     console.log(
-      `${colors.yellow}No .pnpm-license-checker.json file found. Defaulting to an empty allowedPackages list.${colors.reset}`
+      `${colors.yellow}No .pnpm-license-checker.json file found. Using default configuration.${colors.reset}`
     );
-    return [];
+    return { allowedPackages: [], allowedLicenses: defaultAllowedLicenses };
   }
 
   try {
-    const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
-    if (Array.isArray(config.allowedPackages)) {
-      console.log(
-        `${colors.green}Loaded allowedPackages from ${configPath}.${colors.reset}`
-      );
-      return config.allowedPackages;
-    } else {
-      console.warn(
-        `${colors.yellow}Invalid format in .pnpm-license-checker.json: allowedPackages should be an array. Defaulting to an empty list.${colors.reset}`
-      );
-      return [];
-    }
+    const config = JSON.parse(readFileSync(configPath, 'utf8'));
+
+    console.log(config);
+
+    // Validate and load allowedPackages
+    const allowedPackages = Array.isArray(config.allowedPackages)
+      ? config.allowedPackages
+      : [];
+
+    // Validate and load allowedLicenses
+    const allowedLicenses = Array.isArray(config.allowedLicenses)
+      ? config.allowedLicenses
+      : defaultAllowedLicenses;
+
+    console.log(
+      `${colors.green}Loaded configuration from ${configPath}.${colors.reset}`
+    );
+
+    return { allowedPackages, allowedLicenses };
   } catch (error) {
     console.error(
       `${colors.red}Error reading .pnpm-license-checker.json: ${error.message}${colors.reset}`
     );
-    return [];
+    return { allowedPackages: [], allowedLicenses: defaultAllowedLicenses };
   }
 }
 
@@ -107,7 +115,7 @@ function processLicenseKey(licenseKey) {
 
 module.exports = {
   findLicenseCheckerConfig,
-  loadAllowedPackages,
+  loadConfig,
   processLicenseKey,
-  allowedLicenses,
+  defaultAllowedLicenses,
 };

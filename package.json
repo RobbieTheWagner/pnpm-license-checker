@@ -1,8 +1,12 @@
 {
   "name": "pnpm-license-checker",
-  "version": "0.0.0",
+  "version": "0.0.2",
   "description": "",
-  "keywords": ["license", "checker", "pnpm"],
+  "keywords": [
+    "license",
+    "checker",
+    "pnpm"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/RobbieTheWagner/pnpm-license-checker.git"

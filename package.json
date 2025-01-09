@@ -7,11 +7,7 @@
     "lint": "biome check",
     "test": "vitest run"
   },
-  "keywords": [
-    "license",
-    "checker",
-    "pnpm"
-  ],
+  "keywords": ["license", "checker", "pnpm"],
   "author": {
     "name": "Robert Wagner",
     "email": "rwwagner90@gmail.com",

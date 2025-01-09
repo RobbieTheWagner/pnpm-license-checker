@@ -2,26 +2,50 @@
   "name": "pnpm-license-checker",
   "version": "0.0.0",
   "description": "",
-  "main": "index.js",
-  "scripts": {
-    "lint": "biome check",
-    "test": "vitest run"
-  },
   "keywords": ["license", "checker", "pnpm"],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RobbieTheWagner/pnpm-license-checker.git"
+  },
+  "license": "MIT",
   "author": {
     "name": "Robert Wagner",
     "email": "rwwagner90@gmail.com",
     "url": "https://github.com/RobbieTheWagner"
   },
-  "license": "MIT",
-  "packageManager": "pnpm@9.15.3",
+  "main": "index.js",
+  "scripts": {
+    "lint": "biome check",
+    "test": "vitest run"
+  },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
+    "@release-it-plugins/lerna-changelog": "^7.0.0",
     "memfs": "^4.15.3",
+    "release-it": "^18.1.1",
     "vitest": "^2.1.8"
   },
+  "packageManager": "pnpm@9.15.3",
   "engines": {
     "node": ">= 18",
     "pnpm": ">= 9"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
+  },
+  "release-it": {
+    "plugins": {
+      "@release-it-plugins/lerna-changelog": {
+        "infile": "CHANGELOG.md",
+        "launchEditor": true
+      }
+    },
+    "git": {
+      "tagName": "v${version}"
+    },
+    "github": {
+      "release": true,
+      "tokenRef": "GITHUB_AUTH"
+    }
   }
 }

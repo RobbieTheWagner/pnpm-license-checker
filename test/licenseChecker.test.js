@@ -1,11 +1,11 @@
-import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest';
+import path from 'node:path';
 import { fs, vol } from 'memfs';
-import path from 'path';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
+  defaultAllowedLicenses,
   findLicenseCheckerConfig,
   loadConfig,
   processLicenseKey,
-  defaultAllowedLicenses,
 } from '../src/licenseChecker';
 
 // tell vitest to use fs mock from __mocks__ folder
@@ -32,7 +32,7 @@ describe('findLicenseCheckerConfig', () => {
   it('finds the config file in the current directory', () => {
     const configPath = path.join(process.cwd(), '.pnpm-license-checker.json');
     vi.spyOn(fs, 'existsSync').mockImplementation(
-      (file) => file === configPath
+      (file) => file === configPath,
     );
 
     const result = findLicenseCheckerConfig(process.cwd());
@@ -43,7 +43,7 @@ describe('findLicenseCheckerConfig', () => {
     const parentDir = path.dirname(process.cwd());
     const configPath = path.join(parentDir, '.pnpm-license-checker.json');
     vi.spyOn(fs, 'existsSync').mockImplementation(
-      (file) => file === configPath
+      (file) => file === configPath,
     );
 
     const result = findLicenseCheckerConfig(process.cwd());
@@ -69,7 +69,7 @@ describe('loadConfig', () => {
 
     // Mock file system behavior
     vi.spyOn(fs, 'existsSync').mockImplementation(
-      (file) => file === configPath
+      (file) => file === configPath,
     );
     vi.spyOn(fs, 'readFileSync').mockImplementation((file) => {
       if (file === configPath) {
@@ -90,7 +90,7 @@ describe('loadConfig', () => {
 
     // Mock file system behavior
     vi.spyOn(fs, 'existsSync').mockImplementation(
-      (file) => file === configPath
+      (file) => file === configPath,
     );
     vi.spyOn(fs, 'readFileSync').mockImplementation((file) => {
       if (file === configPath) {
@@ -109,7 +109,7 @@ describe('loadConfig', () => {
 
     // Mock file system behavior
     vi.spyOn(fs, 'existsSync').mockImplementation(
-      (file) => file === configPath
+      (file) => file === configPath,
     );
     vi.spyOn(fs, 'readFileSync').mockImplementation((file) => {
       if (file === configPath) {

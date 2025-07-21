@@ -17,20 +17,19 @@
     "email": "rwwagner90@gmail.com",
     "url": "https://github.com/RobbieTheWagner"
   },
+  "type": "module",
   "main": "index.js",
   "bin": {
     "pnpm-license-checker": "index.js"
   },
-  "type": "module",
   "scripts": {
     "lint": "biome check",
     "test": "vitest run"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
-    "@release-it-plugins/lerna-changelog": "^8.0.1",
     "memfs": "^4.17.2",
-    "release-it": "^18.1.2",
+    "release-plan": "^0.16.0",
     "vitest": "^2.1.9"
   },
   "engines": {
@@ -39,20 +38,5 @@
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org"
-  },
-  "release-it": {
-    "plugins": {
-      "@release-it-plugins/lerna-changelog": {
-        "infile": "CHANGELOG.md",
-        "launchEditor": true
-      }
-    },
-    "git": {
-      "tagName": "v${version}"
-    },
-    "github": {
-      "release": true,
-      "tokenRef": "GITHUB_AUTH"
-    }
   }
 }

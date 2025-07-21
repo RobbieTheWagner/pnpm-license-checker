@@ -2,7 +2,11 @@
   "name": "pnpm-license-checker",
   "version": "0.1.0",
   "description": "",
-  "keywords": ["license", "checker", "pnpm"],
+  "keywords": [
+    "license",
+    "checker",
+    "pnpm"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/RobbieTheWagner/pnpm-license-checker.git"
@@ -24,9 +28,9 @@
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
-    "@release-it-plugins/lerna-changelog": "^7.0.0",
+    "@release-it-plugins/lerna-changelog": "^8.0.1",
     "memfs": "^4.17.2",
-    "release-it": "^17.11.0",
+    "release-it": "^18.1.2",
     "vitest": "^2.1.9"
   },
   "engines": {

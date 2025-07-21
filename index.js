@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-const { exec } = require('node:child_process');
-const { loadConfig, processLicenseKey } = require('./licenseChecker');
+import { exec } from 'node:child_process';
+import { loadConfig, processLicenseKey } from './src/licenseChecker.js';
 
 // ANSI escape codes for colors
 const colors = {

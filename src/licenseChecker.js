@@ -1,5 +1,5 @@
 import { existsSync, readFileSync } from 'node:fs';
-const path = require('node:path');
+import path from 'node:path';
 
 // ANSI escape codes for colors
 const colors = {
@@ -10,7 +10,7 @@ const colors = {
 };
 
 // Default allowed licenses
-const defaultAllowedLicenses = [
+export const defaultAllowedLicenses = [
   'Apache-2.0',
   'All Rights Reserved',
   'Artistic-2.0',
@@ -39,7 +39,7 @@ const defaultAllowedLicenses = [
  * @param {string} startDir - Starting directory for the search
  * @returns {string|null} - Path to the configuration file or null if not found
  */
-function findLicenseCheckerConfig(startDir) {
+export function findLicenseCheckerConfig(startDir) {
   let currentDir = startDir;
 
   while (true) {
@@ -63,8 +63,7 @@ function findLicenseCheckerConfig(startDir) {
  * Loads configuration values from the configuration file
  * @returns {Object} - Contains `allowedPackages` and `allowedLicenses`
  */
-function loadConfig() {
-  console.log('Hello!');
+export function loadConfig() {
   const configPath = findLicenseCheckerConfig(process.cwd());
   if (!configPath) {
     console.log(
@@ -106,16 +105,9 @@ function loadConfig() {
  * @param {string} licenseKey - License string, e.g., "(MIT OR Apache-2.0)"
  * @returns {Array<string>} - Array of individual licenses
  */
-function processLicenseKey(licenseKey) {
+export function processLicenseKey(licenseKey) {
   return licenseKey
     .replace(/[()]/g, '')
     .split(/\s*OR\s*/)
     .map((license) => license.trim());
 }
-
-module.exports = {
-  findLicenseCheckerConfig,
-  loadConfig,
-  processLicenseKey,
-  defaultAllowedLicenses,
-};

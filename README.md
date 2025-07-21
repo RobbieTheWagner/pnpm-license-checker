@@ -12,6 +12,10 @@ pnpm add pnpm-license-checker -D
 
 ## Usage
 
+```bash
+pnpm-license-checker
+```
+
 ### Specifying Allowed Packages
 
 Sometimes you may want to specifically allow certain packages that are internal or have a one-off license that you do not want to blanket allow.

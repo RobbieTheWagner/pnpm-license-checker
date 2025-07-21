@@ -1,5 +1,16 @@
 # Changelog
 
+## Release (2025-07-21)
+
+* pnpm-license-checker 1.0.0 (major)
+
+#### :boom: Breaking Change
+* `pnpm-license-checker`
+  * [#2](https://github.com/RobbieTheWagner/pnpm-license-checker/pull/2) Convert to ESM ([@RobbieTheWagner](https://github.com/RobbieTheWagner))
+
+#### Committers: 1
+- Robbie Wagner ([@RobbieTheWagner](https://github.com/RobbieTheWagner))
+
 
 ## v0.1.0 (2025-07-21)
 

@@ -14,6 +14,9 @@
     "url": "https://github.com/RobbieTheWagner"
   },
   "main": "index.js",
+  "bin": {
+    "pnpm-license-checker": "index.js"
+  },
   "scripts": {
     "lint": "biome check",
     "test": "vitest run"
@@ -25,10 +28,9 @@
     "release-it": "^17.0.0",
     "vitest": "^2.1.8"
   },
-  "packageManager": "pnpm@9.15.3",
   "engines": {
-    "node": ">= 18",
-    "pnpm": ">= 9"
+    "node": ">= 20",
+    "pnpm": ">= 10"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org"

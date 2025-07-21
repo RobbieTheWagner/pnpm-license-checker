@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const { exec } = require('node:child_process');
 const { loadConfig, processLicenseKey } = require('./licenseChecker');
 

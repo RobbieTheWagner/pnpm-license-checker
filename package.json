@@ -28,7 +28,6 @@
     "release-it": "^17.0.0",
     "vitest": "^2.1.8"
   },
-  "packageManager": "pnpm@10.12.4",
   "engines": {
     "node": ">= 20",
     "pnpm": ">= 10"

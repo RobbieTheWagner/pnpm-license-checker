@@ -16,6 +16,14 @@ pnpm add pnpm-license-checker -D
 pnpm-license-checker
 ```
 
+You may want to define a script in your package.json like:
+
+```json
+"scripts": {
+  "license:check": "pnpm-license-checker"
+}
+```
+
 ### Specifying Allowed Packages
 
 Sometimes you may want to specifically allow certain packages that are internal or have a one-off license that you do not want to blanket allow.

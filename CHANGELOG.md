@@ -2,6 +2,17 @@
 
 ## Release (2025-07-21)
 
+* pnpm-license-checker 1.0.1 (patch)
+
+#### :bug: Bug Fix
+* `pnpm-license-checker`
+  * [#5](https://github.com/RobbieTheWagner/pnpm-license-checker/pull/5) Explain adding script ([@RobbieTheWagner](https://github.com/RobbieTheWagner))
+
+#### Committers: 1
+- Robbie Wagner ([@RobbieTheWagner](https://github.com/RobbieTheWagner))
+
+## Release (2025-07-21)
+
 * pnpm-license-checker 1.0.0 (major)
 
 #### :boom: Breaking Change

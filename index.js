@@ -30,7 +30,7 @@ function getPnpmLicenses() {
         } catch (parseError) {
           reject(`Failed to parse JSON: ${parseError.message}`);
         }
-      }
+      },
     );
   });
 }
@@ -58,7 +58,7 @@ function getPnpmLicenses() {
       if (filteredPackages.length > 0) {
         // Ensure all individual licenses in the list are supported
         const unsupportedLicenses = individualLicenses.filter(
-          (license) => !allowedLicenses.includes(license)
+          (license) => !allowedLicenses.includes(license),
         );
 
         if (unsupportedLicenses.length > 0) {
@@ -67,8 +67,8 @@ function getPnpmLicenses() {
             `${
               colors.red
             }Unsupported License(s) Detected: ${unsupportedLicenses.join(
-              ', '
-            )}${colors.reset}`
+              ', ',
+            )}${colors.reset}`,
           );
           console.error(`Affected Packages: ${filteredPackages.join(', ')}`);
         }
@@ -79,7 +79,7 @@ function getPnpmLicenses() {
       throw new Error('One or more packages have unsupported licenses.');
     }
     console.log(
-      `${colors.green}All packages have supported licenses.${colors.reset}`
+      `${colors.green}All packages have supported licenses.${colors.reset}`,
     );
   } catch (error) {
     console.error(`${colors.red}Error: ${error.message}${colors.reset}`);

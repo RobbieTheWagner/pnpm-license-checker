@@ -67,7 +67,7 @@ export function loadConfig() {
   const configPath = findLicenseCheckerConfig(process.cwd());
   if (!configPath) {
     console.log(
-      `${colors.yellow}No .pnpm-license-checker.json file found. Using default configuration.${colors.reset}`
+      `${colors.yellow}No .pnpm-license-checker.json file found. Using default configuration.${colors.reset}`,
     );
     return { allowedPackages: [], allowedLicenses: defaultAllowedLicenses };
   }
@@ -88,13 +88,13 @@ export function loadConfig() {
       : defaultAllowedLicenses;
 
     console.log(
-      `${colors.green}Loaded configuration from ${configPath}.${colors.reset}`
+      `${colors.green}Loaded configuration from ${configPath}.${colors.reset}`,
     );
 
     return { allowedPackages, allowedLicenses };
   } catch (error) {
     console.error(
-      `${colors.red}Error reading .pnpm-license-checker.json: ${error.message}${colors.reset}`
+      `${colors.red}Error reading .pnpm-license-checker.json: ${error.message}${colors.reset}`,
     );
     return { allowedPackages: [], allowedLicenses: defaultAllowedLicenses };
   }

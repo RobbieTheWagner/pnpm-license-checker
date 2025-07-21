@@ -14,6 +14,9 @@
     "url": "https://github.com/RobbieTheWagner"
   },
   "main": "index.js",
+  "bin": {
+    "pnpm-license-checker": "index.js"
+  },
   "scripts": {
     "lint": "biome check",
     "test": "vitest run"

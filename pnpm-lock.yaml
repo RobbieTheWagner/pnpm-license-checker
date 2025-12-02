@@ -7,6 +7,10 @@ settings:
 importers:
 
   .:
+    dependencies:
+      json5:
+        specifier: ^2.2.3
+        version: 2.2.3
     devDependencies:
       '@biomejs/biome':
         specifier: 1.9.4
@@ -888,6 +892,11 @@ packages:
   json-parse-even-better-errors@4.0.0:
     resolution: {integrity: sha512-lR4MXjGNgkJc7tkQ97kb2nuEMnNCyU//XYVH0MKTGcXEiSudQ5MKGKen3C5QubYy0vmq+JGitUg92uuywGEwIA==}
     engines: {node: ^18.17.0 || >=20.5.0}
+
+  json5@2.2.3:
+    resolution: {integrity: sha512-XmOWe7eyHYH14cLdVPoyg+GOH3rYX++KpzrylJwSW98t3Nk+U8XOl8FWKOgwtzdb8lXGf6zYwDUzeHMWfxasyg==}
+    engines: {node: '>=6'}
+    hasBin: true
 
   jsonfile@6.1.0:
     resolution: {integrity: sha512-5dgndWOriYSm5cnYaJNhalLNDKOqFwyDB/rr1E9ZsGciGvKPs8R2xYGCacuf3z6K1YKDz182fd+fY3cn3pMqXQ==}
@@ -2276,6 +2285,8 @@ snapshots:
   jsbn@1.1.0: {}
 
   json-parse-even-better-errors@4.0.0: {}
+
+  json5@2.2.3: {}
 
   jsonfile@6.1.0:
     dependencies:

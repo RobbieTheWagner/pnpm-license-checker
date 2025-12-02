@@ -32,6 +32,9 @@
     "release-plan": "^0.16.0",
     "vitest": "^2.1.9"
   },
+  "dependencies": {
+    "json5": "^2.2.3"
+  },
   "engines": {
     "node": ">= 20",
     "pnpm": ">= 10"

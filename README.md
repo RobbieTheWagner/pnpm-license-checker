@@ -24,11 +24,13 @@ You may want to define a script in your package.json like:
 }
 ```
 
+## Configuration
+
+You can configure the license checker in a `.pnpm-license-checker.json` file. This is parsed using [JSON5](https://json5.org/), so you can use comments.
+
 ### Specifying Allowed Packages
 
 Sometimes you may want to specifically allow certain packages that are internal or have a one-off license that you do not want to blanket allow.
-
-To do so, you can configure this in `.pnpm-license-checker.json`:
 
 ```json
 {

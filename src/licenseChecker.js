@@ -1,5 +1,6 @@
 import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
+import JSON5 from 'json5';
 
 // ANSI escape codes for colors
 const colors = {
@@ -73,7 +74,7 @@ export function loadConfig() {
   }
 
   try {
-    const config = JSON.parse(readFileSync(configPath, 'utf8'));
+    const config = JSON5.parse(readFileSync(configPath, 'utf8'));
 
     console.log(config);
 

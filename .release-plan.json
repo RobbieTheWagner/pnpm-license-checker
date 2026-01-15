@@ -1,18 +1,18 @@
 {
   "solution": {
     "pnpm-license-checker": {
-      "impact": "patch",
-      "oldVersion": "1.0.0",
-      "newVersion": "1.0.1",
+      "impact": "minor",
+      "oldVersion": "1.0.1",
+      "newVersion": "1.1.0",
       "tagName": "latest",
       "constraints": [
         {
-          "impact": "patch",
-          "reason": "Appears in changelog section :bug: Bug Fix"
+          "impact": "minor",
+          "reason": "Appears in changelog section :rocket: Enhancement"
         }
       ],
       "pkgJSONPath": "./package.json"
     }
   },
-  "description": "## Release (2025-07-21)\n\n* pnpm-license-checker 1.0.1 (patch)\n\n#### :bug: Bug Fix\n* `pnpm-license-checker`\n  * [#5](https://github.com/RobbieTheWagner/pnpm-license-checker/pull/5) Explain adding script ([@RobbieTheWagner](https://github.com/RobbieTheWagner))\n\n#### Committers: 1\n- Robbie Wagner ([@RobbieTheWagner](https://github.com/RobbieTheWagner))\n"
+  "description": "## Release (2026-01-15)\n\n* pnpm-license-checker 1.1.0 (minor)\n\n#### :rocket: Enhancement\n* `pnpm-license-checker`\n  * [#7](https://github.com/RobbieTheWagner/pnpm-license-checker/pull/7) Parse config with JSON5 ([@jkissel](https://github.com/jkissel))\n\n#### Committers: 1\n- Johannes Kissel ([@jkissel](https://github.com/jkissel))\n"
 }

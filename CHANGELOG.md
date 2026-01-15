@@ -1,5 +1,16 @@
 # Changelog
 
+## Release (2026-01-15)
+
+* pnpm-license-checker 1.1.0 (minor)
+
+#### :rocket: Enhancement
+* `pnpm-license-checker`
+  * [#7](https://github.com/RobbieTheWagner/pnpm-license-checker/pull/7) Parse config with JSON5 ([@jkissel](https://github.com/jkissel))
+
+#### Committers: 1
+- Johannes Kissel ([@jkissel](https://github.com/jkissel))
+
 ## Release (2025-07-21)
 
 * pnpm-license-checker 1.0.1 (patch)

@@ -16,6 +16,12 @@ pnpm add pnpm-license-checker -D
 pnpm-license-checker
 ```
 
+The `-P` / `--prod`, and `-D` / `--dev` options are passed on to `pnpm licenses` ([more info on these options](https://pnpm.io/cli/licenses)). For example, this command checks the licenses of only your production dependencies:
+
+```bash
+pnpm-license-checker --prod
+```
+
 You may want to define a script in your package.json like:
 
 ```json

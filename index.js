@@ -1,7 +1,10 @@
 #!/usr/bin/env node
 
-import { exec } from 'node:child_process';
-import { loadConfig, processLicenseKey } from './src/licenseChecker.js';
+import {
+  getPnpmLicenses,
+  loadConfig,
+  processLicenseKey,
+} from './src/licenseChecker.js';
 
 // ANSI escape codes for colors
 const colors = {
@@ -9,31 +12,6 @@ const colors = {
   red: '\x1b[31m',
   green: '\x1b[32m',
 };
-
-function getPnpmLicenses() {
-  return new Promise((resolve, reject) => {
-    exec(
-      'pnpm licenses list --json',
-      { encoding: 'utf-8' },
-      (error, stdout, stderr) => {
-        if (error) {
-          reject(`Error: ${error.message}`);
-          return;
-        }
-        if (stderr) {
-          reject(`Standard Error: ${stderr}`);
-          return;
-        }
-        try {
-          const licensesData = JSON.parse(stdout);
-          resolve(licensesData);
-        } catch (parseError) {
-          reject(`Failed to parse JSON: ${parseError.message}`);
-        }
-      },
-    );
-  });
-}
 
 (async () => {
   try {

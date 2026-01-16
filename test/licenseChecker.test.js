@@ -1,9 +1,11 @@
+import { exec } from 'node:child_process';
 import path from 'node:path';
 import { fs, vol } from 'memfs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   defaultAllowedLicenses,
   findLicenseCheckerConfig,
+  getPnpmLicenses,
   loadConfig,
   processLicenseKey,
 } from '../src/licenseChecker';
@@ -12,6 +14,9 @@ import {
 // this can be done in a setup file if fs should always be mocked
 vi.mock('node:fs');
 vi.mock('node:fs/promises');
+vi.mock('node:child_process');
+
+const originalProcessArgv = process.argv;
 
 beforeEach(() => {
   // reset the state of in-memory fs
@@ -19,6 +24,7 @@ beforeEach(() => {
 });
 afterEach(() => {
   vi.restoreAllMocks();
+  process.argv = originalProcessArgv;
 });
 
 describe('findLicenseCheckerConfig', () => {
@@ -120,6 +126,18 @@ describe('loadConfig', () => {
 
     const { allowedLicenses } = loadConfig();
     expect(allowedLicenses).toEqual(defaultAllowedLicenses);
+  });
+});
+
+describe('getPnpmLicenses', () => {
+  it('passes certain CLI flags through to pnpm licenses', () => {
+    process.argv = ['-D', '--dev', '-P', '--prod', '--no-pass'];
+    getPnpmLicenses();
+    expect(exec).toHaveBeenCalledWith(
+      'pnpm licenses list --json -D --dev -P --prod',
+      expect.anything(),
+      expect.anything(),
+    );
   });
 });
 

@@ -1,3 +1,4 @@
+import { exec } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import JSON5 from 'json5';
@@ -99,6 +100,34 @@ export function loadConfig() {
     );
     return { allowedPackages: [], allowedLicenses: defaultAllowedLicenses };
   }
+}
+
+const PASS_THROUGH_FLAGS = new Set(['-D', '--dev', '-P', '--prod']);
+
+export function getPnpmLicenses() {
+  const flags = process.argv.filter((arg) => PASS_THROUGH_FLAGS.has(arg));
+  return new Promise((resolve, reject) => {
+    exec(
+      `pnpm licenses list --json ${flags.join(' ')}`,
+      { encoding: 'utf-8' },
+      (error, stdout, stderr) => {
+        if (error) {
+          reject(`Error: ${error.message}`);
+          return;
+        }
+        if (stderr) {
+          reject(`Standard Error: ${stderr}`);
+          return;
+        }
+        try {
+          const licensesData = JSON.parse(stdout);
+          resolve(licensesData);
+        } catch (parseError) {
+          reject(`Failed to parse JSON: ${parseError.message}`);
+        }
+      },
+    );
+  });
 }
 
 /**

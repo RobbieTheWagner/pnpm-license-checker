@@ -1,5 +1,16 @@
 # Changelog
 
+## Release (2026-03-11)
+
+* pnpm-license-checker 1.2.0 (minor)
+
+#### :rocket: Enhancement
+* `pnpm-license-checker`
+  * [#8](https://github.com/RobbieTheWagner/pnpm-license-checker/pull/8) Pass the `-P` / `--prod`, and `-D` / `--dev` options on to `pnpm licenses` ([@jkissel](https://github.com/jkissel))
+
+#### Committers: 1
+- Johannes Kissel ([@jkissel](https://github.com/jkissel))
+
 ## Release (2026-01-15)
 
 * pnpm-license-checker 1.1.0 (minor)

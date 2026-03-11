@@ -2,8 +2,8 @@
   "solution": {
     "pnpm-license-checker": {
       "impact": "minor",
-      "oldVersion": "1.0.1",
-      "newVersion": "1.1.0",
+      "oldVersion": "1.1.0",
+      "newVersion": "1.2.0",
       "tagName": "latest",
       "constraints": [
         {
@@ -14,5 +14,5 @@
       "pkgJSONPath": "./package.json"
     }
   },
-  "description": "## Release (2026-01-15)\n\n* pnpm-license-checker 1.1.0 (minor)\n\n#### :rocket: Enhancement\n* `pnpm-license-checker`\n  * [#7](https://github.com/RobbieTheWagner/pnpm-license-checker/pull/7) Parse config with JSON5 ([@jkissel](https://github.com/jkissel))\n\n#### Committers: 1\n- Johannes Kissel ([@jkissel](https://github.com/jkissel))\n"
+  "description": "## Release (2026-03-11)\n\n* pnpm-license-checker 1.2.0 (minor)\n\n#### :rocket: Enhancement\n* `pnpm-license-checker`\n  * [#8](https://github.com/RobbieTheWagner/pnpm-license-checker/pull/8) Pass the `-P` / `--prod`, and `-D` / `--dev` options on to `pnpm licenses` ([@jkissel](https://github.com/jkissel))\n\n#### Committers: 1\n- Johannes Kissel ([@jkissel](https://github.com/jkissel))\n"
 }

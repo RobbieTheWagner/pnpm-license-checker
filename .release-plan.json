@@ -1,18 +1,18 @@
 {
   "solution": {
     "pnpm-license-checker": {
-      "impact": "minor",
-      "oldVersion": "1.1.0",
-      "newVersion": "1.2.0",
+      "impact": "patch",
+      "oldVersion": "1.2.0",
+      "newVersion": "1.2.1",
       "tagName": "latest",
       "constraints": [
         {
-          "impact": "minor",
-          "reason": "Appears in changelog section :rocket: Enhancement"
+          "impact": "patch",
+          "reason": "Appears in changelog section :house: Internal"
         }
       ],
       "pkgJSONPath": "./package.json"
     }
   },
-  "description": "## Release (2026-03-11)\n\n* pnpm-license-checker 1.2.0 (minor)\n\n#### :rocket: Enhancement\n* `pnpm-license-checker`\n  * [#8](https://github.com/RobbieTheWagner/pnpm-license-checker/pull/8) Pass the `-P` / `--prod`, and `-D` / `--dev` options on to `pnpm licenses` ([@jkissel](https://github.com/jkissel))\n\n#### Committers: 1\n- Johannes Kissel ([@jkissel](https://github.com/jkissel))\n"
+  "description": "## Release (2026-03-23)\n\n* pnpm-license-checker 1.2.1 (patch)\n\n#### :house: Internal\n* `pnpm-license-checker`\n  * [#11](https://github.com/RobbieTheWagner/pnpm-license-checker/pull/11) Update release-plan ([@RobbieTheWagner](https://github.com/RobbieTheWagner))\n\n#### Committers: 1\n- Robbie Wagner ([@RobbieTheWagner](https://github.com/RobbieTheWagner))\n"
 }

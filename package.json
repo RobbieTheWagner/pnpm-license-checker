@@ -26,14 +26,14 @@
     "lint": "biome check",
     "test": "vitest run"
   },
+  "dependencies": {
+    "json5": "^2.2.3"
+  },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
     "memfs": "^4.17.2",
-    "release-plan": "^0.16.0",
+    "release-plan": "^0.17.4",
     "vitest": "^2.1.9"
-  },
-  "dependencies": {
-    "json5": "^2.2.3"
   },
   "engines": {
     "node": ">= 20",

@@ -2,8 +2,8 @@
   "solution": {
     "pnpm-license-checker": {
       "impact": "patch",
-      "oldVersion": "1.2.0",
-      "newVersion": "1.2.1",
+      "oldVersion": "1.2.1",
+      "newVersion": "1.2.2",
       "tagName": "latest",
       "constraints": [
         {
@@ -14,5 +14,5 @@
       "pkgJSONPath": "./package.json"
     }
   },
-  "description": "## Release (2026-03-23)\n\n* pnpm-license-checker 1.2.1 (patch)\n\n#### :house: Internal\n* `pnpm-license-checker`\n  * [#11](https://github.com/RobbieTheWagner/pnpm-license-checker/pull/11) Update release-plan ([@RobbieTheWagner](https://github.com/RobbieTheWagner))\n\n#### Committers: 1\n- Robbie Wagner ([@RobbieTheWagner](https://github.com/RobbieTheWagner))\n"
+  "description": "## Release (2026-03-25)\n\n* pnpm-license-checker 1.2.2 (patch)\n\n#### :house: Internal\n* `pnpm-license-checker`\n  * [#13](https://github.com/RobbieTheWagner/pnpm-license-checker/pull/13) Update description ([@RobbieTheWagner](https://github.com/RobbieTheWagner))\n  * [#12](https://github.com/RobbieTheWagner/pnpm-license-checker/pull/12) Prepare Release v1.2.1 ([@github-actions[bot]](https://github.com/apps/github-actions))\n  * [#11](https://github.com/RobbieTheWagner/pnpm-license-checker/pull/11) Update release-plan ([@RobbieTheWagner](https://github.com/RobbieTheWagner))\n\n#### Committers: 2\n- GitHub Actions [Bot] ([@github-actions](https://github.com/apps/github-actions))\n- Robbie Wagner ([@RobbieTheWagner](https://github.com/RobbieTheWagner))\n"
 }

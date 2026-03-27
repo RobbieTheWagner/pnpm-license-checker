@@ -1,5 +1,19 @@
 # Changelog
 
+## Release (2026-03-25)
+
+* pnpm-license-checker 1.2.2 (patch)
+
+#### :house: Internal
+* `pnpm-license-checker`
+  * [#13](https://github.com/RobbieTheWagner/pnpm-license-checker/pull/13) Update description ([@RobbieTheWagner](https://github.com/RobbieTheWagner))
+  * [#12](https://github.com/RobbieTheWagner/pnpm-license-checker/pull/12) Prepare Release v1.2.1 ([@github-actions[bot]](https://github.com/apps/github-actions))
+  * [#11](https://github.com/RobbieTheWagner/pnpm-license-checker/pull/11) Update release-plan ([@RobbieTheWagner](https://github.com/RobbieTheWagner))
+
+#### Committers: 2
+- GitHub Actions [Bot] ([@github-actions](https://github.com/apps/github-actions))
+- Robbie Wagner ([@RobbieTheWagner](https://github.com/RobbieTheWagner))
+
 ## Release (2026-03-23)
 
 * pnpm-license-checker 1.2.1 (patch)

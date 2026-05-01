@@ -151,56 +151,64 @@ describe('isLicenseAllowed', () => {
     expect(isLicenseAllowed('GPL-3.0', new Set(['MIT']))).toBe(false);
   });
 
-  it('OR: passes when at least one side is allowed', () => {
-    expect(isLicenseAllowed('(MIT OR GPL-3.0)', new Set(['MIT']))).toBe(true);
+  describe('OR', () => {
+    it('passes when at least one side is allowed', () => {
+      expect(isLicenseAllowed('(MIT OR GPL-3.0)', new Set(['MIT']))).toBe(true);
+    });
+
+    it('passes when both sides are allowed', () => {
+      expect(isLicenseAllowed('(MIT OR Apache-2.0)', new Set(['MIT', 'Apache-2.0']))).toBe(true);
+    });
+
+    it('fails when neither side is allowed', () => {
+      expect(isLicenseAllowed('(GPL-2.0 OR GPL-3.0)', new Set(['MIT']))).toBe(false);
+    });
   });
 
-  it('OR: passes when both sides are allowed', () => {
-    expect(isLicenseAllowed('(MIT OR Apache-2.0)', new Set(['MIT', 'Apache-2.0']))).toBe(true);
+  describe('AND', () => {
+    it('passes when all parts are allowed', () => {
+      expect(isLicenseAllowed('Apache-2.0 AND BSD-3-Clause', new Set(['Apache-2.0', 'BSD-3-Clause']))).toBe(true);
+    });
+
+    it('fails when any part is disallowed', () => {
+      expect(isLicenseAllowed('Apache-2.0 AND GPL-3.0', new Set(['Apache-2.0', 'MIT']))).toBe(false);
+    });
   });
 
-  it('OR: fails when neither side is allowed', () => {
-    expect(isLicenseAllowed('(GPL-2.0 OR GPL-3.0)', new Set(['MIT']))).toBe(false);
+  describe('grouped expressions', () => {
+    it('(MIT OR Apache-2.0) AND BSD-3-Clause passes when OR-group and AND-part are allowed', () => {
+      expect(isLicenseAllowed('(MIT OR Apache-2.0) AND BSD-3-Clause', new Set(['Apache-2.0', 'BSD-3-Clause']))).toBe(true);
+    });
+
+    it('(MIT OR Apache-2.0) AND BSD-3-Clause fails when AND-part is not allowed', () => {
+      expect(isLicenseAllowed('(MIT OR Apache-2.0) AND BSD-3-Clause', new Set(['MIT', 'Apache-2.0']))).toBe(false);
+    });
+
+    it('MIT OR (Apache-2.0 AND BSD-3-Clause) passes when the OR-left is allowed', () => {
+      expect(isLicenseAllowed('MIT OR (Apache-2.0 AND BSD-3-Clause)', new Set(['MIT']))).toBe(true);
+    });
+
+    it('MIT OR (Apache-2.0 AND BSD-3-Clause) passes when both AND-parts are allowed', () => {
+      expect(isLicenseAllowed('MIT OR (Apache-2.0 AND BSD-3-Clause)', new Set(['Apache-2.0', 'BSD-3-Clause']))).toBe(true);
+    });
+
+    it('MIT OR (Apache-2.0 AND BSD-3-Clause) fails when neither alternative is fully allowed', () => {
+      expect(isLicenseAllowed('MIT OR (Apache-2.0 AND BSD-3-Clause)', new Set(['Apache-2.0']))).toBe(false);
+    });
+
+    it('(MIT OR Apache-2.0) AND (BSD-3-Clause OR ISC) passes when one of each group is allowed', () => {
+      expect(isLicenseAllowed('(MIT OR Apache-2.0) AND (BSD-3-Clause OR ISC)', new Set(['MIT', 'ISC']))).toBe(true);
+    });
   });
 
-  it('AND: passes when all parts are allowed', () => {
-    expect(isLicenseAllowed('Apache-2.0 AND BSD-3-Clause', new Set(['Apache-2.0', 'BSD-3-Clause']))).toBe(true);
-  });
+  describe('WITH exceptions', () => {
+    it('passes when the full "X WITH Y" string is in allowedLicenses', () => {
+      expect(isLicenseAllowed('GPL-2.0 WITH Classpath-exception-2.0', new Set(['GPL-2.0 WITH Classpath-exception-2.0']))).toBe(true);
+    });
 
-  it('AND: fails when any part is disallowed', () => {
-    expect(isLicenseAllowed('Apache-2.0 AND GPL-3.0', new Set(['Apache-2.0', 'MIT']))).toBe(false);
-  });
-
-  it('grouped: (MIT OR Apache-2.0) AND BSD-3-Clause passes when OR-group and AND-part are allowed', () => {
-    expect(isLicenseAllowed('(MIT OR Apache-2.0) AND BSD-3-Clause', new Set(['Apache-2.0', 'BSD-3-Clause']))).toBe(true);
-  });
-
-  it('grouped: (MIT OR Apache-2.0) AND BSD-3-Clause fails when AND-part is not allowed', () => {
-    expect(isLicenseAllowed('(MIT OR Apache-2.0) AND BSD-3-Clause', new Set(['MIT', 'Apache-2.0']))).toBe(false);
-  });
-
-  it('grouped: MIT OR (Apache-2.0 AND BSD-3-Clause) passes when the OR-left is allowed', () => {
-    expect(isLicenseAllowed('MIT OR (Apache-2.0 AND BSD-3-Clause)', new Set(['MIT']))).toBe(true);
-  });
-
-  it('grouped: MIT OR (Apache-2.0 AND BSD-3-Clause) passes when both AND-parts are allowed', () => {
-    expect(isLicenseAllowed('MIT OR (Apache-2.0 AND BSD-3-Clause)', new Set(['Apache-2.0', 'BSD-3-Clause']))).toBe(true);
-  });
-
-  it('grouped: MIT OR (Apache-2.0 AND BSD-3-Clause) fails when neither alternative is fully allowed', () => {
-    expect(isLicenseAllowed('MIT OR (Apache-2.0 AND BSD-3-Clause)', new Set(['Apache-2.0']))).toBe(false);
-  });
-
-  it('grouped: (MIT OR Apache-2.0) AND (BSD-3-Clause OR ISC) passes when one of each group is allowed', () => {
-    expect(isLicenseAllowed('(MIT OR Apache-2.0) AND (BSD-3-Clause OR ISC)', new Set(['MIT', 'ISC']))).toBe(true);
-  });
-
-  it('WITH: passes when the full "X WITH Y" string is in allowedLicenses', () => {
-    expect(isLicenseAllowed('GPL-2.0 WITH Classpath-exception-2.0', new Set(['GPL-2.0 WITH Classpath-exception-2.0']))).toBe(true);
-  });
-
-  it('WITH: fails when only the base license is in allowedLicenses', () => {
-    expect(isLicenseAllowed('GPL-2.0 WITH Classpath-exception-2.0', new Set(['GPL-2.0']))).toBe(false);
+    it('fails when only the base license is in allowedLicenses', () => {
+      expect(isLicenseAllowed('GPL-2.0 WITH Classpath-exception-2.0', new Set(['GPL-2.0']))).toBe(false);
+    });
   });
 });
 

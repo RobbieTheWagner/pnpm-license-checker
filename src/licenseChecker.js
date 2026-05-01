@@ -77,7 +77,6 @@ export function loadConfig() {
   try {
     const config = JSON5.parse(readFileSync(configPath, 'utf8'));
 
-    console.log(config);
 
     // Validate and load allowedPackages
     const allowedPackages = Array.isArray(config.allowedPackages)
@@ -135,15 +134,15 @@ export function getPnpmLicenses() {
  * AND: all parts must be allowed.
  * OR: at least one part must be allowed.
  * @param {string} licenseKey - License string, e.g., "MIT", "(MIT OR Apache-2.0)", "Apache-2.0 AND BSD-3-Clause"
- * @param {Array<string>} allowedLicenses - List of allowed license identifiers
+ * @param {Set<string>} allowedLicenses - Set of allowed license identifiers
  * @returns {boolean}
  */
 export function isLicenseAllowed(licenseKey, allowedLicenses) {
   const normalized = licenseKey.replace(/[()]/g, '');
-  const andParts = normalized.split(/\s+AND\s+/).map((s) => s.trim());
-  return andParts.every((andPart) => {
-    const orParts = andPart.split(/\s+OR\s+/).map((s) => s.trim());
-    return orParts.some((license) => allowedLicenses.includes(license));
+  const requiredClauses = normalized.split(/\s+AND\s+/);
+  return requiredClauses.every((requiredClause) => {
+    const alternatives = requiredClause.split(/\s+OR\s+/);
+    return alternatives.some((license) => allowedLicenses.has(license));
   });
 }
 
@@ -155,15 +154,17 @@ export function isLicenseAllowed(licenseKey, allowedLicenses) {
  * @returns {{ passed: boolean, violations: Array<{ license: string, packages: Array<string> }> }}
  */
 export function checkLicenses(licenses, allowedPackages, allowedLicenses) {
+  const allowedPackagesSet = new Set(allowedPackages);
+  const allowedLicensesSet = new Set(allowedLicenses);
   const violations = [];
 
   for (const [licenseKey, packages] of Object.entries(licenses)) {
-    const filteredPackages = packages
-      .filter((pkg) => !allowedPackages.includes(pkg.name))
+    const violatingPackages = packages
+      .filter((pkg) => !allowedPackagesSet.has(pkg.name))
       .map((pkg) => pkg.name);
 
-    if (filteredPackages.length > 0 && !isLicenseAllowed(licenseKey, allowedLicenses)) {
-      violations.push({ license: licenseKey, packages: filteredPackages });
+    if (violatingPackages.length > 0 && !isLicenseAllowed(licenseKey, allowedLicensesSet)) {
+      violations.push({ license: licenseKey, packages: violatingPackages });
     }
   }
 

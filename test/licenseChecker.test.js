@@ -144,31 +144,31 @@ describe('getPnpmLicenses', () => {
 
 describe('isLicenseAllowed', () => {
   it('allows a plain allowed license', () => {
-    expect(isLicenseAllowed('MIT', ['MIT'])).toBe(true);
+    expect(isLicenseAllowed('MIT', new Set(['MIT']))).toBe(true);
   });
 
   it('rejects a plain disallowed license', () => {
-    expect(isLicenseAllowed('GPL-3.0', ['MIT'])).toBe(false);
+    expect(isLicenseAllowed('GPL-3.0', new Set(['MIT']))).toBe(false);
   });
 
   it('OR: passes when at least one side is allowed', () => {
-    expect(isLicenseAllowed('(MIT OR GPL-3.0)', ['MIT'])).toBe(true);
+    expect(isLicenseAllowed('(MIT OR GPL-3.0)', new Set(['MIT']))).toBe(true);
   });
 
   it('OR: passes when both sides are allowed', () => {
-    expect(isLicenseAllowed('(MIT OR Apache-2.0)', ['MIT', 'Apache-2.0'])).toBe(true);
+    expect(isLicenseAllowed('(MIT OR Apache-2.0)', new Set(['MIT', 'Apache-2.0']))).toBe(true);
   });
 
   it('OR: fails when neither side is allowed', () => {
-    expect(isLicenseAllowed('(GPL-2.0 OR GPL-3.0)', ['MIT'])).toBe(false);
+    expect(isLicenseAllowed('(GPL-2.0 OR GPL-3.0)', new Set(['MIT']))).toBe(false);
   });
 
   it('AND: passes when all parts are allowed', () => {
-    expect(isLicenseAllowed('Apache-2.0 AND BSD-3-Clause', ['Apache-2.0', 'BSD-3-Clause'])).toBe(true);
+    expect(isLicenseAllowed('Apache-2.0 AND BSD-3-Clause', new Set(['Apache-2.0', 'BSD-3-Clause']))).toBe(true);
   });
 
   it('AND: fails when any part is disallowed', () => {
-    expect(isLicenseAllowed('Apache-2.0 AND GPL-3.0', ['Apache-2.0', 'MIT'])).toBe(false);
+    expect(isLicenseAllowed('Apache-2.0 AND GPL-3.0', new Set(['Apache-2.0', 'MIT']))).toBe(false);
   });
 });
 

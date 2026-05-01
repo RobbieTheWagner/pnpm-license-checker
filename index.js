@@ -3,7 +3,7 @@
 import {
   getPnpmLicenses,
   loadConfig,
-  processLicenseKey,
+  checkLicenses,
 } from './src/licenseChecker.js';
 
 // ANSI escape codes for colors
@@ -20,40 +20,14 @@ const colors = {
 
     console.log('Licenses Data:', licenses);
 
-    let hasUnsupportedLicense = false;
+    const { passed, violations } = checkLicenses(licenses, allowedPackages, allowedLicenses);
 
-    // Iterate over licenses
-    for (const [licenseKey, packages] of Object.entries(licenses)) {
-      // Process license key to handle "OR" lists
-      const individualLicenses = processLicenseKey(licenseKey);
-
-      // Filter out allowed packages
-      const filteredPackages = packages
-        .filter((pkg) => !allowedPackages.includes(pkg.name))
-        .map((pkg) => pkg.name); // Get the names of the remaining packages
-
-      // Check licenses for filtered packages
-      if (filteredPackages.length > 0) {
-        // Ensure all individual licenses in the list are supported
-        const unsupportedLicenses = individualLicenses.filter(
-          (license) => !allowedLicenses.includes(license),
-        );
-
-        if (unsupportedLicenses.length > 0) {
-          hasUnsupportedLicense = true;
-          console.error(
-            `${
-              colors.red
-            }Unsupported License(s) Detected: ${unsupportedLicenses.join(
-              ', ',
-            )}${colors.reset}`,
-          );
-          console.error(`Affected Packages: ${filteredPackages.join(', ')}`);
-        }
-      }
+    for (const { license, packages } of violations) {
+      console.error(`${colors.red}Unsupported License Detected: ${license}${colors.reset}`);
+      console.error(`Affected Packages: ${packages.join(', ')}`);
     }
 
-    if (hasUnsupportedLicense) {
+    if (!passed) {
       throw new Error('One or more packages have unsupported licenses.');
     }
     console.log(
@@ -61,6 +35,6 @@ const colors = {
     );
   } catch (error) {
     console.error(`${colors.red}Error: ${error.message}${colors.reset}`);
-    process.exit(1); // Exit with failure code
+    process.exit(1);
   }
 })();

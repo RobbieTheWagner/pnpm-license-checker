@@ -131,13 +131,41 @@ export function getPnpmLicenses() {
 }
 
 /**
- * Processes license strings with "OR" logic
- * @param {string} licenseKey - License string, e.g., "(MIT OR Apache-2.0)"
- * @returns {Array<string>} - Array of individual licenses
+ * Checks whether a license expression is allowed.
+ * AND: all parts must be allowed.
+ * OR: at least one part must be allowed.
+ * @param {string} licenseKey - License string, e.g., "MIT", "(MIT OR Apache-2.0)", "Apache-2.0 AND BSD-3-Clause"
+ * @param {Array<string>} allowedLicenses - List of allowed license identifiers
+ * @returns {boolean}
  */
-export function processLicenseKey(licenseKey) {
-  return licenseKey
-    .replace(/[()]/g, '')
-    .split(/\s*OR\s*/)
-    .map((license) => license.trim());
+export function isLicenseAllowed(licenseKey, allowedLicenses) {
+  const normalized = licenseKey.replace(/[()]/g, '');
+  const andParts = normalized.split(/\s+AND\s+/).map((s) => s.trim());
+  return andParts.every((andPart) => {
+    const orParts = andPart.split(/\s+OR\s+/).map((s) => s.trim());
+    return orParts.some((license) => allowedLicenses.includes(license));
+  });
+}
+
+/**
+ * Checks all licenses returned by pnpm against the allow lists.
+ * @param {Object} licenses - Output from getPnpmLicenses(), keyed by license expression
+ * @param {Array<string>} allowedPackages - Package names that are always allowed
+ * @param {Array<string>} allowedLicenses - Allowed license identifiers
+ * @returns {{ passed: boolean, violations: Array<{ license: string, packages: Array<string> }> }}
+ */
+export function checkLicenses(licenses, allowedPackages, allowedLicenses) {
+  const violations = [];
+
+  for (const [licenseKey, packages] of Object.entries(licenses)) {
+    const filteredPackages = packages
+      .filter((pkg) => !allowedPackages.includes(pkg.name))
+      .map((pkg) => pkg.name);
+
+    if (filteredPackages.length > 0 && !isLicenseAllowed(licenseKey, allowedLicenses)) {
+      violations.push({ license: licenseKey, packages: filteredPackages });
+    }
+  }
+
+  return { passed: violations.length === 0, violations };
 }

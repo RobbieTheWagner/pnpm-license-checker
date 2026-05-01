@@ -36,8 +36,8 @@
     "vitest": "^2.1.9"
   },
   "engines": {
-    "node": ">= 20",
-    "pnpm": ">= 10"
+    "node": ">= 22",
+    "pnpm": "^11"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org"

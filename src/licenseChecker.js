@@ -131,19 +131,38 @@ export function getPnpmLicenses() {
 
 /**
  * Checks whether a license expression is allowed.
- * AND: all parts must be allowed.
- * OR: at least one part must be allowed.
- * @param {string} licenseKey - License string, e.g., "MIT", "(MIT OR Apache-2.0)", "Apache-2.0 AND BSD-3-Clause"
+ * Supports grouped SPDX expressions with AND, OR, and parentheses.
+ * WITH exceptions (e.g. "GPL-2.0 WITH Classpath-exception-2.0") are treated
+ * as a single atomic identifier and must appear verbatim in allowedLicenses.
+ * AND has higher precedence than OR; parentheses override precedence.
+ * @param {string} licenseKey - License string, e.g., "MIT", "(MIT OR Apache-2.0) AND BSD-3-Clause"
  * @param {Set<string>} allowedLicenses - Set of allowed license identifiers
  * @returns {boolean}
  */
 export function isLicenseAllowed(licenseKey, allowedLicenses) {
-  const normalized = licenseKey.replace(/[()]/g, '');
-  const requiredClauses = normalized.split(/\s+AND\s+/);
-  return requiredClauses.every((requiredClause) => {
-    const alternatives = requiredClause.split(/\s+OR\s+/);
-    return alternatives.some((license) => allowedLicenses.has(license));
-  });
+  const tokens = licenseKey.match(/\(|\)|AND|OR|WITH|[\w.\-+]+/g) ?? [];
+  let i = 0;
+
+  function parseExpr() {
+    let result = parseAnd();
+    while (tokens[i] === 'OR') { i++; result = parseAnd() || result; }
+    return result;
+  }
+
+  function parseAnd() {
+    let result = parseAtom();
+    while (tokens[i] === 'AND') { i++; result = parseAtom() && result; }
+    return result;
+  }
+
+  function parseAtom() {
+    if (tokens[i] === '(') { i++; const r = parseExpr(); i++; return r; }
+    let id = tokens[i++];
+    if (tokens[i] === 'WITH') { i++; id += ` WITH ${tokens[i++]}`; }
+    return allowedLicenses.has(id);
+  }
+
+  return parseExpr();
 }
 
 /**

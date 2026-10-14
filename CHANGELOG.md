@@ -1,5 +1,21 @@
 # Changelog
 
+## Release (2026-10-14)
+
+* pnpm-license-checker 1.2.3 (patch)
+
+#### :bug: Bug Fix
+* `pnpm-license-checker`
+  * [#15](https://github.com/RobbieTheWagner/pnpm-license-checker/pull/15) fix: correct conditional logic & improve license checking ([@pvds](https://github.com/pvds))
+
+#### :house: Internal
+* `pnpm-license-checker`
+  * [#18](https://github.com/RobbieTheWagner/pnpm-license-checker/pull/18) Fix lint ([@RobbieTheWagner](https://github.com/RobbieTheWagner))
+
+#### Committers: 2
+- Peter van der Steen ([@pvds](https://github.com/pvds))
+- Robbie Wagner ([@RobbieTheWagner](https://github.com/RobbieTheWagner))
+
 ## Release (2026-03-25)
 
 * pnpm-license-checker 1.2.2 (patch)

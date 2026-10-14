@@ -2,10 +2,14 @@
   "solution": {
     "pnpm-license-checker": {
       "impact": "patch",
-      "oldVersion": "1.2.1",
-      "newVersion": "1.2.2",
+      "oldVersion": "1.2.2",
+      "newVersion": "1.2.3",
       "tagName": "latest",
       "constraints": [
+        {
+          "impact": "patch",
+          "reason": "Appears in changelog section :bug: Bug Fix"
+        },
         {
           "impact": "patch",
           "reason": "Appears in changelog section :house: Internal"
@@ -14,5 +18,5 @@
       "pkgJSONPath": "./package.json"
     }
   },
-  "description": "## Release (2026-03-25)\n\n* pnpm-license-checker 1.2.2 (patch)\n\n#### :house: Internal\n* `pnpm-license-checker`\n  * [#13](https://github.com/RobbieTheWagner/pnpm-license-checker/pull/13) Update description ([@RobbieTheWagner](https://github.com/RobbieTheWagner))\n  * [#12](https://github.com/RobbieTheWagner/pnpm-license-checker/pull/12) Prepare Release v1.2.1 ([@github-actions[bot]](https://github.com/apps/github-actions))\n  * [#11](https://github.com/RobbieTheWagner/pnpm-license-checker/pull/11) Update release-plan ([@RobbieTheWagner](https://github.com/RobbieTheWagner))\n\n#### Committers: 2\n- GitHub Actions [Bot] ([@github-actions](https://github.com/apps/github-actions))\n- Robbie Wagner ([@RobbieTheWagner](https://github.com/RobbieTheWagner))\n"
+  "description": "## Release (2026-10-14)\n\n* pnpm-license-checker 1.2.3 (patch)\n\n#### :bug: Bug Fix\n* `pnpm-license-checker`\n  * [#15](https://github.com/RobbieTheWagner/pnpm-license-checker/pull/15) fix: correct conditional logic & improve license checking ([@pvds](https://github.com/pvds))\n\n#### :house: Internal\n* `pnpm-license-checker`\n  * [#18](https://github.com/RobbieTheWagner/pnpm-license-checker/pull/18) Fix lint ([@RobbieTheWagner](https://github.com/RobbieTheWagner))\n\n#### Committers: 2\n- Peter van der Steen ([@pvds](https://github.com/pvds))\n- Robbie Wagner ([@RobbieTheWagner](https://github.com/RobbieTheWagner))\n"
 }

@@ -77,7 +77,6 @@ export function loadConfig() {
   try {
     const config = JSON5.parse(readFileSync(configPath, 'utf8'));
 
-
     // Validate and load allowedPackages
     const allowedPackages = Array.isArray(config.allowedPackages)
       ? config.allowedPackages
@@ -145,20 +144,34 @@ export function isLicenseAllowed(licenseKey, allowedLicenses) {
 
   function parseExpr() {
     let result = parseAnd();
-    while (tokens[i] === 'OR') { i++; result = parseAnd() || result; }
+    while (tokens[i] === 'OR') {
+      i++;
+      result = parseAnd() || result;
+    }
     return result;
   }
 
   function parseAnd() {
     let result = parseAtom();
-    while (tokens[i] === 'AND') { i++; result = parseAtom() && result; }
+    while (tokens[i] === 'AND') {
+      i++;
+      result = parseAtom() && result;
+    }
     return result;
   }
 
   function parseAtom() {
-    if (tokens[i] === '(') { i++; const r = parseExpr(); i++; return r; }
+    if (tokens[i] === '(') {
+      i++;
+      const r = parseExpr();
+      i++;
+      return r;
+    }
     let id = tokens[i++];
-    if (tokens[i] === 'WITH') { i++; id += ` WITH ${tokens[i++]}`; }
+    if (tokens[i] === 'WITH') {
+      i++;
+      id += ` WITH ${tokens[i++]}`;
+    }
     return allowedLicenses.has(id);
   }
 
@@ -182,7 +195,10 @@ export function checkLicenses(licenses, allowedPackages, allowedLicenses) {
       .filter((pkg) => !allowedPackagesSet.has(pkg.name))
       .map((pkg) => pkg.name);
 
-    if (violatingPackages.length > 0 && !isLicenseAllowed(licenseKey, allowedLicensesSet)) {
+    if (
+      violatingPackages.length > 0 &&
+      !isLicenseAllowed(licenseKey, allowedLicensesSet)
+    ) {
       violations.push({ license: licenseKey, packages: violatingPackages });
     }
   }

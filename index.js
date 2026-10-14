@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
 import {
+  checkLicenses,
   getPnpmLicenses,
   loadConfig,
-  checkLicenses,
 } from './src/licenseChecker.js';
 
 // ANSI escape codes for colors
@@ -20,10 +20,16 @@ const colors = {
 
     console.log('Licenses Data:', licenses);
 
-    const { passed, violations } = checkLicenses(licenses, allowedPackages, allowedLicenses);
+    const { passed, violations } = checkLicenses(
+      licenses,
+      allowedPackages,
+      allowedLicenses,
+    );
 
     for (const { license, packages } of violations) {
-      console.error(`${colors.red}Unsupported License Detected: ${license}${colors.reset}`);
+      console.error(
+        `${colors.red}Unsupported License Detected: ${license}${colors.reset}`,
+      );
       console.error(`Affected Packages: ${packages.join(', ')}`);
     }
 

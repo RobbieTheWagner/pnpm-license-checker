@@ -77,7 +77,6 @@ export function loadConfig() {
   try {
     const config = JSON5.parse(readFileSync(configPath, 'utf8'));
 
-    console.log(config);
 
     // Validate and load allowedPackages
     const allowedPackages = Array.isArray(config.allowedPackages)
@@ -131,13 +130,62 @@ export function getPnpmLicenses() {
 }
 
 /**
- * Processes license strings with "OR" logic
- * @param {string} licenseKey - License string, e.g., "(MIT OR Apache-2.0)"
- * @returns {Array<string>} - Array of individual licenses
+ * Checks whether a license expression is allowed.
+ * Supports grouped SPDX expressions with AND, OR, and parentheses.
+ * WITH exceptions (e.g. "GPL-2.0 WITH Classpath-exception-2.0") are treated
+ * as a single atomic identifier and must appear verbatim in allowedLicenses.
+ * AND has higher precedence than OR; parentheses override precedence.
+ * @param {string} licenseKey - License string, e.g., "MIT", "(MIT OR Apache-2.0) AND BSD-3-Clause"
+ * @param {Set<string>} allowedLicenses - Set of allowed license identifiers
+ * @returns {boolean}
  */
-export function processLicenseKey(licenseKey) {
-  return licenseKey
-    .replace(/[()]/g, '')
-    .split(/\s*OR\s*/)
-    .map((license) => license.trim());
+export function isLicenseAllowed(licenseKey, allowedLicenses) {
+  const tokens = licenseKey.match(/\(|\)|AND|OR|WITH|[\w.\-+]+/g) ?? [];
+  let i = 0;
+
+  function parseExpr() {
+    let result = parseAnd();
+    while (tokens[i] === 'OR') { i++; result = parseAnd() || result; }
+    return result;
+  }
+
+  function parseAnd() {
+    let result = parseAtom();
+    while (tokens[i] === 'AND') { i++; result = parseAtom() && result; }
+    return result;
+  }
+
+  function parseAtom() {
+    if (tokens[i] === '(') { i++; const r = parseExpr(); i++; return r; }
+    let id = tokens[i++];
+    if (tokens[i] === 'WITH') { i++; id += ` WITH ${tokens[i++]}`; }
+    return allowedLicenses.has(id);
+  }
+
+  return parseExpr();
+}
+
+/**
+ * Checks all licenses returned by pnpm against the allow lists.
+ * @param {Object} licenses - Output from getPnpmLicenses(), keyed by license expression
+ * @param {Array<string>} allowedPackages - Package names that are always allowed
+ * @param {Array<string>} allowedLicenses - Allowed license identifiers
+ * @returns {{ passed: boolean, violations: Array<{ license: string, packages: Array<string> }> }}
+ */
+export function checkLicenses(licenses, allowedPackages, allowedLicenses) {
+  const allowedPackagesSet = new Set(allowedPackages);
+  const allowedLicensesSet = new Set(allowedLicenses);
+  const violations = [];
+
+  for (const [licenseKey, packages] of Object.entries(licenses)) {
+    const violatingPackages = packages
+      .filter((pkg) => !allowedPackagesSet.has(pkg.name))
+      .map((pkg) => pkg.name);
+
+    if (violatingPackages.length > 0 && !isLicenseAllowed(licenseKey, allowedLicensesSet)) {
+      violations.push({ license: licenseKey, packages: violatingPackages });
+    }
+  }
+
+  return { passed: violations.length === 0, violations };
 }

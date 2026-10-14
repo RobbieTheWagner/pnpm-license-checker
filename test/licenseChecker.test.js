@@ -3,11 +3,12 @@ import path from 'node:path';
 import { fs, vol } from 'memfs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
+  checkLicenses,
   defaultAllowedLicenses,
   findLicenseCheckerConfig,
   getPnpmLicenses,
+  isLicenseAllowed,
   loadConfig,
-  processLicenseKey,
 } from '../src/licenseChecker';
 
 // tell vitest to use fs mock from __mocks__ folder
@@ -141,22 +142,138 @@ describe('getPnpmLicenses', () => {
   });
 });
 
-describe('processLicenseKey', () => {
-  it('handles a single license key without OR', () => {
-    const licenseKey = 'MIT';
-    const result = processLicenseKey(licenseKey);
-    expect(result).toEqual(['MIT']);
+describe('isLicenseAllowed', () => {
+  it('allows a plain allowed license', () => {
+    expect(isLicenseAllowed('MIT', new Set(['MIT']))).toBe(true);
   });
 
-  it('splits OR-separated license keys', () => {
-    const licenseKey = '(MIT OR Apache-2.0)';
-    const result = processLicenseKey(licenseKey);
-    expect(result).toEqual(['MIT', 'Apache-2.0']);
+  it('rejects a plain disallowed license', () => {
+    expect(isLicenseAllowed('GPL-3.0', new Set(['MIT']))).toBe(false);
   });
 
-  it('handles complex OR-separated license keys', () => {
-    const licenseKey = '(BSD-2-Clause OR MIT OR Apache-2.0)';
-    const result = processLicenseKey(licenseKey);
-    expect(result).toEqual(['BSD-2-Clause', 'MIT', 'Apache-2.0']);
+  describe('OR', () => {
+    it('passes when at least one side is allowed', () => {
+      expect(isLicenseAllowed('(MIT OR GPL-3.0)', new Set(['MIT']))).toBe(true);
+    });
+
+    it('passes when both sides are allowed', () => {
+      expect(isLicenseAllowed('(MIT OR Apache-2.0)', new Set(['MIT', 'Apache-2.0']))).toBe(true);
+    });
+
+    it('fails when neither side is allowed', () => {
+      expect(isLicenseAllowed('(GPL-2.0 OR GPL-3.0)', new Set(['MIT']))).toBe(false);
+    });
+  });
+
+  describe('AND', () => {
+    it('passes when all parts are allowed', () => {
+      expect(isLicenseAllowed('Apache-2.0 AND BSD-3-Clause', new Set(['Apache-2.0', 'BSD-3-Clause']))).toBe(true);
+    });
+
+    it('fails when any part is disallowed', () => {
+      expect(isLicenseAllowed('Apache-2.0 AND GPL-3.0', new Set(['Apache-2.0', 'MIT']))).toBe(false);
+    });
+  });
+
+  describe('grouped expressions', () => {
+    it('(MIT OR Apache-2.0) AND BSD-3-Clause passes when OR-group and AND-part are allowed', () => {
+      expect(isLicenseAllowed('(MIT OR Apache-2.0) AND BSD-3-Clause', new Set(['Apache-2.0', 'BSD-3-Clause']))).toBe(true);
+    });
+
+    it('(MIT OR Apache-2.0) AND BSD-3-Clause fails when AND-part is not allowed', () => {
+      expect(isLicenseAllowed('(MIT OR Apache-2.0) AND BSD-3-Clause', new Set(['MIT', 'Apache-2.0']))).toBe(false);
+    });
+
+    it('MIT OR (Apache-2.0 AND BSD-3-Clause) passes when the OR-left is allowed', () => {
+      expect(isLicenseAllowed('MIT OR (Apache-2.0 AND BSD-3-Clause)', new Set(['MIT']))).toBe(true);
+    });
+
+    it('MIT OR (Apache-2.0 AND BSD-3-Clause) passes when both AND-parts are allowed', () => {
+      expect(isLicenseAllowed('MIT OR (Apache-2.0 AND BSD-3-Clause)', new Set(['Apache-2.0', 'BSD-3-Clause']))).toBe(true);
+    });
+
+    it('MIT OR (Apache-2.0 AND BSD-3-Clause) fails when neither alternative is fully allowed', () => {
+      expect(isLicenseAllowed('MIT OR (Apache-2.0 AND BSD-3-Clause)', new Set(['Apache-2.0']))).toBe(false);
+    });
+
+    it('(MIT OR Apache-2.0) AND (BSD-3-Clause OR ISC) passes when one of each group is allowed', () => {
+      expect(isLicenseAllowed('(MIT OR Apache-2.0) AND (BSD-3-Clause OR ISC)', new Set(['MIT', 'ISC']))).toBe(true);
+    });
+  });
+
+  describe('WITH exceptions', () => {
+    it('passes when the full "X WITH Y" string is in allowedLicenses', () => {
+      expect(isLicenseAllowed('GPL-2.0 WITH Classpath-exception-2.0', new Set(['GPL-2.0 WITH Classpath-exception-2.0']))).toBe(true);
+    });
+
+    it('fails when only the base license is in allowedLicenses', () => {
+      expect(isLicenseAllowed('GPL-2.0 WITH Classpath-exception-2.0', new Set(['GPL-2.0']))).toBe(false);
+    });
+  });
+});
+
+describe('checkLicenses', () => {
+  const makePkg = (name) => ({ name });
+
+  it('passes when all licenses are allowed', () => {
+    const licenses = {
+      MIT: [makePkg('pkg-a')],
+      'Apache-2.0': [makePkg('pkg-b')],
+    };
+    const { passed, violations } = checkLicenses(licenses, [], ['MIT', 'Apache-2.0']);
+    expect(passed).toBe(true);
+    expect(violations).toHaveLength(0);
+  });
+
+  it('fails when a license is not allowed', () => {
+    const licenses = {
+      'GPL-3.0': [makePkg('bad-pkg')],
+    };
+    const { passed, violations } = checkLicenses(licenses, [], ['MIT']);
+    expect(passed).toBe(false);
+    expect(violations).toHaveLength(1);
+    expect(violations[0].license).toBe('GPL-3.0');
+    expect(violations[0].packages).toEqual(['bad-pkg']);
+  });
+
+  it('OR: passes when at least one license in an OR expression is allowed', () => {
+    const licenses = {
+      '(MIT OR GPL-3.0)': [makePkg('pkg-c')],
+    };
+    const { passed } = checkLicenses(licenses, [], ['MIT']);
+    expect(passed).toBe(true);
+  });
+
+  it('AND: fails when one part of an AND expression is not allowed', () => {
+    const licenses = {
+      'Apache-2.0 AND GPL-3.0': [makePkg('pkg-d')],
+    };
+    const { passed } = checkLicenses(licenses, [], ['Apache-2.0', 'MIT']);
+    expect(passed).toBe(false);
+  });
+
+  it('AND: passes when all parts of an AND expression are allowed', () => {
+    const licenses = {
+      'Apache-2.0 AND BSD-3-Clause': [makePkg('pkg-e')],
+    };
+    const { passed } = checkLicenses(licenses, [], ['Apache-2.0', 'BSD-3-Clause']);
+    expect(passed).toBe(true);
+  });
+
+  it('skips packages listed in allowedPackages even with a bad license', () => {
+    const licenses = {
+      'GPL-3.0': [makePkg('exempted-pkg'), makePkg('other-pkg')],
+    };
+    const { passed, violations } = checkLicenses(licenses, ['exempted-pkg'], ['MIT']);
+    expect(passed).toBe(false);
+    expect(violations[0].packages).toEqual(['other-pkg']);
+  });
+
+  it('passes when all packages with a bad license are in allowedPackages', () => {
+    const licenses = {
+      'GPL-3.0': [makePkg('exempted-pkg')],
+    };
+    const { passed } = checkLicenses(licenses, ['exempted-pkg'], ['MIT']);
+    expect(passed).toBe(true);
   });
 });
